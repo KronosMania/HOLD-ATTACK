@@ -1,0 +1,30 @@
+using System.Reflection;
+using BepInEx;
+using HarmonyLib;
+using UnityEngine;
+
+namespace HoldAttack
+{
+    [BepInPlugin("com.sunkenlandmodtemplate.HoldAttack", "HoldAttack Mod", "1.0.0")]
+    public class MainPlugin3 : BaseUnityPlugin
+    {
+        void Awake()
+        {
+            var harmony = new Harmony("com.sunkenlandmodtemplate.HoldAttack");
+            harmony.PatchAll(Assembly.GetExecutingAssembly());
+        }
+    }
+
+    [HarmonyPatch(typeof(WeaponBehavior), "Update")]
+    public class WeaponBehaviorPatch
+    {
+        public static void Prefix(WeaponBehavior __instance)
+        {
+            // If the weapon is a melee weapon, then set semiAuto to false.
+            if (__instance.isMelee)
+            {
+                __instance.semiAuto = false;
+            }
+        }
+    }
+}
